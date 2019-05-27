@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="ContentOne.css">
+</head>
+<body>
+
+<div class="header">
+  <h3>DBMS Practical 1</h3>
+</div>
+
+<div class="row">
+  <div class="leftcolumn">
+   
+   
+   
+   
+     <div class="card">
+      <h2>Q-1:-Create Database Using following schema .Apply given Integrity Constraints and 
+      answer the following queries using SQL.</h2>
+      
+      <h4>RED underline field is primary key & BLACK underline field is foreign key.</h4>
+       <h4>Integrity Constraints:</h4>
+      <li>The value of any attribute should not be null.</li>
+      <li>Legal cities are London ,paris,Rome,New York and Amsterdam.</li>
+      <li>Supplier Number must start with 'S' followed by a decimal integer in the range of 0 to 9999.</li>
+      
+      <h5>Post Written on , Nov 10 , 2018</h5>
+<!--      <div class="fakeimg" style="height:200px;">Image</div>-->
+      <p>SUPPLIER(<u><font color='red'>Sno</font></u>,Sname,address,City)</p>
+      
+<!--supplier table start here-->
+<p>create table SUPPLIER(<br>
+Sno varchar(10)  primary key check (Sno between  'S0' and 'S9999') ,<br>
+Sname varchar(15) not null,<br>
+address varchar(20) not null,<br>
+City varchar(15)<br> 
+check (city in ('London','Paris','Rome','New York','Amsterdam'))not null,<br>
+)<br>
+
+insert into SUPPLIER values('S1','Hitesh','Down Market','Rome')<br>
+insert into SUPPLIER values('S2','Pritesh','GG','London')<br>
+insert into SUPPLIER values('S3','Rakesh','New Boston','New York')<br>
+insert into SUPPLIER values('S4','Ramesh','TTYK','Amsterdam')<br>
+insert into SUPPLIER values('S5','Ritesh','OpenKL','Rome')<br>
+insert into SUPPLIER values('S6','Somesh','Jurny','Paris')<br>
+insert into SUPPLIER values('S7','Rajesh','Jurny','Paris')<br>
+insert into SUPPLIER values('S8','Kalpesh','TTMK','Amsterdam')<br>
+insert into SUPPLIER values('S9','Jayesh','New Boston','New York')<br>
+insert into SUPPLIER values('S10','Ganesh','Down Market','London')<br>
+
+select * from SUPPLIER </p>
+<p>supplier table ends here</p>
+<!-----supplier table ends here-->
+     
+<p>PARTS(<u><font color='red'>Pno</font></u>,Pname,Color,Weight,price)</p>
+      
+<p>create table PARTS<br>
+(
+Pno varchar(10) primary key not null check (Pno between  'P0' and 'P9999'),<br>
+Pname varchar(10) not null,<br>
+Color varchar(10) not null,<br>
+Weight float not null,<br>
+price money not null<br><br>
+)<br>
+
+
+
+insert into PARTS values('P1','Nut','White',12.5,250.2)<br>
+insert into PARTS values('P2','Bold','Red',15,250)<br>
+insert into PARTS values('P3','Cam','White',14.5,600)<br>
+insert into PARTS values('P4','Spring','Blue',12.1,540)<br>
+insert into PARTS values('P5','Chain','White',13.3,1220)<br>
+insert into PARTS values('P6','Nut','White',12.5,250)<br>
+insert into PARTS values('P7','Bold','Red',12.5,250)<br>
+insert into PARTS values('P8','Nut','White',12.5,250)<br>
+insert into PARTS values('P9','Nut','White',12.5,250)<br><br>
+insert into PARTS values('P10','Nut','White',12.5,250)<br>
+select * from PARTS<br></p>
+
+<p>parts table ends here</p><br>
+
+<p>PROJECT(<u><font color='red'>Jno</font></u>,Jname,city)</p><br>
+create table PROJECT<br>
+(<br>
+Jno varchar(10) primary key check (Jno between 'J0' and 'J9999'),<br>
+Jname varchar(10) not null,<br>
+City varchar(10) check(City in ('London','Rome','Paris','New York','Amsterdam'))not null,<br>
+)<br>
+
+insert into PROJECT values('J1','Kiker','Rome')<br>
+insert into PROJECT values('J2','Bash','Rome')<br>
+insert into PROJECT values('J3','Sumo','London')<br>
+insert into PROJECT values('J4','Biker','London')<br>
+insert into PROJECT values('J5','Kiker','Rome')<br>
+insert into PROJECT values('J6','Biker','Paris')<br>
+insert into PROJECT values('J7','Kiker','New York')<br>
+insert into PROJECT values('J8','Biker','Amsterdam')<br>
+insert into PROJECT values('J9','Sumo','Paris')<br>
+insert into PROJECT values('J10','Kiker','London')<br>
+select * from PROJECT<br>
+<p>PROJECT table ends here</p><br>
+
+
+<p>SPJ(<u><font color='black'>Sno</font></u>,<u><font color='Black'>Pno</font></u>,<u><font color='black'>Jno</font></u>,Qty)</p>
+<p>create table SPJ<br>
+(<br>
+Sno varchar(10) references SUPPLIER(Sno),<br>
+Pno varchar(10) references PARTS(Pno) not null,<br>
+Jno varchar(10) references PROJECT(Jno) not null,<br>
+Qty int not null<br>
+)<br>
+insert into SPJ values('S1','P1','J1',5)<br>
+insert into SPJ values('S2','P2','J2',6)<br>
+insert into SPJ values('S3','P3','J3',7)<br>
+insert into SPJ values('S4','P4','J4',11)<br>
+insert into SPJ values('S5','P5','J5',52)<br>
+insert into SPJ values('S1','P4','J4',5)<br>
+insert into SPJ values('S1','P1','J7',14)<br>
+insert into SPJ values('S1','P1','J6',5)<br>
+insert into SPJ values('S1','P1','J3',5)<br>
+select * from SPJ</p><br>
+
+      
+     
+      <h4>Queries:</h4>
+<p>A)Find the total no. of projects supplied by supplier S2.</p>
+<p>
+select count(Jno) as 'Total Projects' from PROJECT where Jno in(<br>
+select Jno from SPJ where Sno in(<br>
+select Sno from SPJ where Sno = 'S2'))<br>
+</p>
+<h4>Output</h4>
+ <div class="fakeimg" style="height:200px;"><img src="SUPLLIER/OutputSuppliedbys2.PNG" alt=""></div>
+
+
+      <p>B)Find colors of parts supplied by supplier S1.</p>
+      <p>C)Write a procedure to calculate total sales amount for the partno p3.</p>
+      <p>D)Write a trigger on parts table such that a part with price less then or equal to 1000 should not be delated.</p>
+       
+    
+<p>E)Write a trigger on SPJ table such that Qty should be in range of 5-10.</p>
+<p>create trigger TriggerTwo<br>
+on SPJ<br>
+after insert <br>
+as<br>
+begin<br>
+	declare @qty1 int<br>
+	select @qty1 =  Qty from inserted <br>
+	if @qty1 between '5' and '10'<br>
+	print 'Inserted Done!'<br>
+	else<br>
+	begin <br>
+	print 'Please Insert Value Between 5 o 10'<br>
+	rollback transaction<br>
+	end<br>
+end<br>
+insert into SPJ values('S1','P1','J1',4)</p><br>
+<h5>Output</h5>
+    <div class="fakeimg" style="height:200px;"><img src="SUPLLIER/Output5to10.PNG" alt=""></div>
+    
+
+<p>F)Find the total quantity of part P1 supplied by supplier S1.</p>
+<p>SELECT sum(Qty) as 'Total Quantity ' FROM   SPJ<br>
+WHERE  Sno = 'S1'<br>
+AND    Pno = 'P1';</p><br>
+    <div class="fakeimg" style="height:200px;"><img src="SUPLLIER/OutputP1S1TotalQuantity.PNG" alt=""></div>
+    
+    
+<p>G)Find  part  numbers for parts supplied by supplier in London to a project in London.</p>
+<p>
+SELECT Pno<br>
+FROM   SPJ, SUPPLIER, PROJECT<br>
+WHERE  spj.Sno = SUPPLIER.Sno<br>
+AND      spj.Jno = PROJECT.Jno<br>
+AND      SUPPLIER.City = 'London'<br>
+AND      PROJECT.City = 'London';<br>
+</p>
+
+
+
+<p>H)Write a procedure to calculate total seles amount for the supplier s2.</p>
+ <p>     
+create procedure cacl_total_sales <br>
+as<br> 
+begin<br><br>
+	select Price from PARTS where Pno in<br>
+	(select Pno from SPJ where Pno = 'P2')<br>
+end<br>
+exec  cacl_total_sales<br>
+</p> 
+    <h4>Output</h4>
+     <div class="fakeimg" style="height:200px;"><img src="SUPLLIER/OutputselesAmoutp2.PNG" alt=""></div>
+     
+             
+      </div>
+      
+     
+  </div>
+  <div class="rightcolumn">
+    <div class="card">
+      <h2>About Me</h2>
+      <div class="fakeimg" style="height:100px;">Image</div>
+      <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
+    </div>
+    <div class="card">
+      <h3>Popular Post</h3>
+      <div class="fakeimg">Image</div><br>
+      <div class="fakeimg">Image</div><br>
+      <div class="fakeimg">Image</div>
+    </div>
+    <div class="card">
+      <h3>Follow Me</h3>
+      <p>Some text..</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <h2>Footer</h2>
+</div>
+
+</body>
+</html>
